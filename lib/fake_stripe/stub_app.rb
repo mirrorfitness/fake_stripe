@@ -67,6 +67,11 @@ module FakeStripe
       json_response 200, fixture('create_card')
     end
 
+    post '/v1/customers/:customer_id/cards' do
+      FakeStripe.card_count += 1
+      json_response 200, fixture('create_card')
+    end
+
     get '/v1/customers/:customer_id/sources/:card_id' do
       json_response 200, fixture('retrieve_card')
     end
@@ -318,12 +323,12 @@ module FakeStripe
       json_response 200, fixture('retrieve_account')
     end
 
-    post "/v1/accounts" do
-      json_response 201, fixture("create_account")
+    post '/v1/accounts' do
+      json_response 201, fixture('create_account')
     end
 
-    post "/v1/accounts/:account_id" do
-      json_response 201, fixture("update_account")
+    post '/v1/accounts/:account_id' do
+      json_response 201, fixture('update_account')
     end
 
     # Balance
@@ -356,6 +361,12 @@ module FakeStripe
 
     get '/v1/tokens/:token_id' do
       json_response 200, fixture('retrieve_token')
+    end
+
+    post '/*' do
+      msg = "Invalid Request - #{request.path_info}"
+      puts "[FakeStripe] #{msg}"
+      json_response 400, { error: msg }
     end
 
     private
